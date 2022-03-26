@@ -167,14 +167,14 @@ services:
     volumes:
       - ./docker/minio/data:/data
     ports:
-      - ${MINIO_PORT}:9000
+      - ${MINIO_PORT}:9001
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minio123}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minio123}
     networks:
       - webnetwork
     hostname: minio
-    command: server /data
+    command: server --address 0.0.0.0:9000 --console-address ":9001" /data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
